@@ -21,14 +21,14 @@ world.camera = new OBC.SimpleCamera(components);
 
 components.init();
 
-const material = new THREE.MeshLambertMaterial({ color: "#00b2ff" });
-const geometry = new THREE.BoxGeometry();
-const cube = new THREE.Mesh(geometry, material);
-world.scene.three.add(cube);
+//const material = new THREE.MeshLambertMaterial({ color: "#00b2ff" });
+//const geometry = new THREE.BoxGeometry();
+//const cube = new THREE.Mesh(geometry, material);
+//world.scene.three.add(cube);
 
 world.scene.setup();
 
-world.camera.controls.setLookAt(3, 3, 3, 0, 0, 0);
+world.camera.controls.setLookAt(60, 20, 50, 0, 0, 0);
 
 const grids = components.get(OBC.Grids);
 grids.create(world);
@@ -54,7 +54,7 @@ loadIfc();
 
 async function loadIfc() {
     const file = await fetch(
-        "https://thatopen.github.io/engine_components/resources/small.ifc",
+        "./LargeBuilding.ifc",
     );
     const data = await file.arrayBuffer();
     const buffer = new Uint8Array(data);
