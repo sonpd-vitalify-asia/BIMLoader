@@ -1,4 +1,5 @@
 import { setupPlateau } from './map-visualizer.js';
+import { setupBIMLoader } from './bim-loader.js';
 
 const VITE_MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 mapboxgl.accessToken = VITE_MAPBOX_TOKEN;
@@ -18,4 +19,5 @@ const map = new mapboxgl.Map({
 
 map.on('style.load', function () {
     setupPlateau(map);
+    setupBIMLoader(map);
 });
