@@ -15,11 +15,11 @@ export function setupBIMLoader(map) {
                 mbxContext,
                 {
                     defaultLights: true,
-                    enableSelectingFeatures: true,
-                    enableSelectingObjects: true,
-                    enableDraggingObjects: true,
-                    enableRotatingObjects: true,
-                    enableTooltips: true
+                    //enableSelectingFeatures: true,
+                    //enableSelectingObjects: true,
+                    //enableDraggingObjects: true,
+                    //enableRotatingObjects: true,
+                    //enableTooltips: true
                 }
             );
 
