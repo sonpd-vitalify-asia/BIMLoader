@@ -5,6 +5,8 @@ import * as WEBIFC from "web-ifc";
 
 export function setupBIMLoader(map) {
 
+    let origin = [139.68943629377733, 35.69018018477205];
+
     let classifier;
     let color = new THREE.Color();
     let slabs;
@@ -67,8 +69,7 @@ export function setupBIMLoader(map) {
             const buffer = new Uint8Array(data);
             const model = await fragmentIfcLoader.load(buffer);
             model.name = "Large Building";
-
-            var origin = [139.68943629377733, 35.69018018477205];
+            
             var p = tb.projectToWorld(origin);
 
             model.position.set(p.x, p.y, p.z);
@@ -124,16 +125,18 @@ export function setupBIMLoader(map) {
         <bim-color-input 
           label="Walls Color" color="#ebd6e7" id="wcolorbutton"
           @input="${({ target }) => {
-                    color.set(target.color)
-                    classifier.setColor(walls, color)
+                color.set(target.color);
+                classifier.setColor(walls, color);
+                map.panTo(origin);
                 }}">
         </bim-color-input>
       
         <bim-color-input 
           label="Slabs Color" color="#ade1e5" id="slabcolorbutton"
           @input="${({ target }) => {
-                    color.set(target.color)
-                    classifier.setColor(slabs, color)
+                color.set(target.color);
+                classifier.setColor(slabs, color);
+                map.panTo(origin);
                 }}">
         </bim-color-input>
 
@@ -144,6 +147,7 @@ export function setupBIMLoader(map) {
                 document.getElementById("slabcolorbutton").color = defaultSlabsColorCode;
                 classifier.setColor(walls, new THREE.Color(defaultWallColorCode));
                 classifier.setColor(slabs, new THREE.Color(defaultSlabsColorCode));
+                map.panTo(origin);
                 }}">  
         </bim-button>  
 
