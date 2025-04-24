@@ -5,7 +5,7 @@ import * as WEBIFC from "web-ifc";
 
 export function setupBIMLoader(map) {
 
-    let origin = [139.68943629377733, 35.69018018477205];
+    let origin = [139.68863163290052, 35.69077270767807];
     let container;
     let model;
 
@@ -65,7 +65,7 @@ export function setupBIMLoader(map) {
 
         async function loadIfc() {
             const file = await fetch(
-                "./TallBuilding.ifc",
+                "./3.ifc",
             );
             const data = await file.arrayBuffer();
             const buffer = new Uint8Array(data);
@@ -75,7 +75,7 @@ export function setupBIMLoader(map) {
             var p = tb.projectToWorld(origin);
 
             model.position.set(p.x, p.y, p.z);
-            model.scale.set(0.24, 0.24, 0.24);
+            model.scale.set(0.1, 0.2, 0.1);
             model.rotation.set(Math.PI / 2, 0, 0);
             tb.add(model);
 
@@ -108,11 +108,15 @@ export function setupBIMLoader(map) {
             classifier.setColor(walls, new THREE.Color(defaultWallColorCode));
             classifier.setColor(slabs, new THREE.Color(defaultSlabsColorCode));
 
-            const fragmentBbox = components.get(OBC.BoundingBoxer);
-            fragmentBbox.add(model);
+            //const fragmentBbox = components.get(OBC.BoundingBoxer);
+            //fragmentBbox.add(model);
 
-            const bbox = fragmentBbox.getMesh();
-            fragmentBbox.reset();
+            //const bbox = fragmentBbox.getMesh();
+            //fragmentBbox.reset();
+
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const bbox = new THREE.Mesh(geometry, material); 
 
             bbox.material.opacity = 0;
             bbox.material.transparent = true;
@@ -120,11 +124,10 @@ export function setupBIMLoader(map) {
 
             let options = {
                 obj: bbox,
-                scale: 0.26,
+                scale: 5,
                 units: 'scene',
-                rotation: { x: 90, y: 0, z: 0 },
                 anchor: 'bottom-left',
-                adjustment: { x: 2.9, y: 3.9, z: -0.1 },
+                adjustment: { x: 0.1, y: 0.5, z: 0 },
             }
 
             var cube = tb.Object3D(options);
@@ -134,14 +137,15 @@ export function setupBIMLoader(map) {
             tb.add(cube);
             LoadUI();
 
-            const entityAttributes = await model.getProperties(186);
-            if (entityAttributes) {
-                // Names are optional attributes! So we check if the entity has it.
-                if (entityAttributes.Name) {
-                    entityAttributes.Name.value = "Project ID: Stand-in Skyscaper";
-                    cube.addTooltip(entityAttributes.Name.value);
-                } 
-            }
+            //const entityAttributes = await model.getProperties(186);
+            //if (entityAttributes) {
+            //    // Names are optional attributes! So we check if the entity has it.
+            //    if (entityAttributes.Name) {
+            //        entityAttributes.Name.value = "Project ID: Stand-in Skyscaper";
+            //    } 
+            //}
+
+            cube.addTooltip("Project ID: Stand-in Institute Building");
         }
 
 
