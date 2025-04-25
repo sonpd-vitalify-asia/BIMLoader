@@ -55,6 +55,8 @@ export function setupBIMLoader(map) {
 
         const fragments = components.get(OBC.FragmentsManager);
         const fragmentIfcLoader = components.get(OBC.IfcLoader);
+        const hider = components.get(OBC.Hider);
+
         classifier = components.get(OBC.Classifier);
 
         await fragmentIfcLoader.setup();
@@ -74,9 +76,9 @@ export function setupBIMLoader(map) {
             
             var p = tb.projectToWorld(origin);
 
-            model.position.set(p.x, p.y, p.z);
+            model.position.set(p.x, p.y - 1, p.z);
             model.scale.set(0.1, 0.2, 0.1);
-            model.rotation.set(Math.PI / 2, 0, 0);
+            model.rotation.set(THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(15), 0);
             tb.add(model);
 
             classifier.byEntity(model);
@@ -120,22 +122,24 @@ export function setupBIMLoader(map) {
 
             bbox.material.opacity = 0;
             bbox.material.transparent = true;
-            console.log(bbox.material);
 
             let options = {
                 obj: bbox,
-                scale: 5,
+                scale: 4,
                 units: 'scene',
                 anchor: 'bottom-left',
                 adjustment: { x: 0.1, y: 0.5, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
             }
 
             var cube = tb.Object3D(options);
             cube.setCoords(origin);
-     
 
             tb.add(cube);
             LoadUI();
+
+            cube.rotation.set(THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(15), 0);
+
 
             //const entityAttributes = await model.getProperties(186);
             //if (entityAttributes) {
@@ -146,36 +150,13 @@ export function setupBIMLoader(map) {
             //}
 
             cube.addTooltip("Project ID: Stand-in Institute Building");
+
+            var site = classifier.find({
+                entities: ["IFCSITE"],
+            });
+            hider.set(false, site);
         }
 
-
-
-        //const casters = components.get(OBC.Raycasters);
-        //const caster = casters.get(world);
-
-        //let previousSelection = null;
-
-        ////world.camera.three.position.set(999,999, 999);
-
-        //const raycaster = new THREE.Raycaster();
-        //const pointer = new THREE.Vector2();
-     
-
-        window.onmousemove = () => {
-            // update the picking ray with the camera and pointer position
-            //raycaster.setFromCamera(pointer, tb.camera);
-
-            //console.log(tb);
-
-            //// calculate objects intersecting the picking ray
-            //const intersects = raycaster.intersectObjects(model);
-
-            //for (let i = 0; i < intersects.length; i++) {
-
-            //    intersects[i].object.material.color.set(0xff0000);
-
-            //}
-        }
 
     }
 
