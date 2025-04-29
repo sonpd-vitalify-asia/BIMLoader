@@ -47,7 +47,7 @@ export function setupLoader(map) {
             dirLight.shadow.camera.bottom = dirLight.shadow.camera.left = -d;
             dirLight.shadow.camera.near = 1;
             dirLight.shadow.camera.far = 1000;
-            dirLight.intensity = 10;
+            dirLight.intensity = 6;
             dirLight.shadow.bias = 0.0001;
             //dirLight.shadow.camera.visible = true;
 
