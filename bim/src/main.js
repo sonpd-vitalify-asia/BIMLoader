@@ -1,10 +1,10 @@
 import { setupPlateau } from './map-visualizer.js';
-import { setupBIMLoader } from './bim-loader.js';
+import { setupLoader } from './map-loader.js';
 
 const VITE_MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 mapboxgl.accessToken = VITE_MAPBOX_TOKEN;
 
-const origin = [139.68943629377733, 35.69018018477205];
+let origin = [139.68863163290052, 35.69077270767807];
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     center: origin,
@@ -19,5 +19,5 @@ const map = new mapboxgl.Map({
 
 map.on('style.load', function () {
     setupPlateau(map);
-    setupBIMLoader(map);
+    setupLoader(map);
 });
