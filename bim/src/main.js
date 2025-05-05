@@ -1,10 +1,11 @@
 import { setupPlateau } from './map-visualizer.js';
 import { setupLoader } from './map-loader.js';
+import { setupShadow } from './shadow-loader.js';
 
 const VITE_MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 mapboxgl.accessToken = VITE_MAPBOX_TOKEN;
 
-let origin = [139.68863163290052, 35.69077270767807];
+var origin = [139.66288635632452, 35.70886269295256];
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     center: origin,
@@ -19,5 +20,6 @@ const map = new mapboxgl.Map({
 
 map.on('style.load', function () {
     setupPlateau(map);
+    setupShadow(map);
     setupLoader(map);
 });

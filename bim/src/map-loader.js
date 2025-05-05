@@ -3,14 +3,16 @@ export function setupLoader(map) {
     var THREE = window.THREE;
 
     // parameters to ensure the model is georeferenced correctly on the map
-    var modelOrigin = [139.6900245027105, 35.68854705256683];
+    var modelOrigin = [139.66461146239243, 35.70698328883841]; 
     var modelAltitude = 0;
-    var modelRotate = [Math.PI / 2, THREE.MathUtils.degToRad(10), 0];
+    var modelRotate = [Math.PI / 2, THREE.MathUtils.degToRad(0), 0];
 
     var modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
         modelOrigin,
         modelAltitude
     );
+
+    let dirLight;
 
     // transformation parameters to position, rotate and scale the 3D model onto the map
     var modelTransform = {
@@ -27,14 +29,14 @@ export function setupLoader(map) {
     };
 
     map.addLayer({
-        id: 'flight-route-layer',
+        id: 'building-layer',
         type: 'custom',
         renderingMode: '3d',
         onAdd: function (map, gl) {
             this.camera = new THREE.Camera();
             this.scene = new THREE.Scene();
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight = new THREE.DirectionalLight(0x5a5a5a, 1);
             dirLight.position.set(40, 70, 100);
             let d = 1000;
             let r = 2;
@@ -45,15 +47,15 @@ export function setupLoader(map) {
             dirLight.shadow.mapSize.height = mapSize;
             dirLight.shadow.camera.top = dirLight.shadow.camera.right = d;
             dirLight.shadow.camera.bottom = dirLight.shadow.camera.left = -d;
-            dirLight.shadow.camera.near = 1;
+            dirLight.shadow.camera.near = 50;
             dirLight.shadow.camera.far = 1000;
             dirLight.intensity = 6;
             dirLight.shadow.bias = 0.0001;
             //dirLight.shadow.camera.visible = true;
 
-            this.scene.add(dirLight);
-            this.scene.add(new THREE.DirectionalLightHelper(dirLight, 10));
 
+            this.scene.add(dirLight);
+            map.dirLight = dirLight;
 
             // use the three.js GLTF loader to add the 3D model to the three.js scene
             var loader = new THREE.GLTFLoader();
@@ -81,6 +83,55 @@ export function setupLoader(map) {
                     //plane.layers.enable(1); plane.layers.disable(0); // it makes the object invisible for the raycaster
                     plane.receiveShadow = true;
                     this.scene.add(plane);
+
+                    const house_geometry_1 = new THREE.BoxGeometry(30, 30, 70);
+                    const house_material_1 = new THREE.ShadowMaterial({
+                        color: 0x595959,
+                        opacity: 1,
+                    });
+
+                    const mat = new THREE.MeshStandardMaterial({
+                        color: 0x595959,
+                        opacity: 0.5,
+                        transparent : true,
+                    });
+                    const house1 = new THREE.Mesh(house_geometry_1, house_material_1);
+                    house1.receiveShadow = true;
+                    house1.position.set(-80,15,-25);
+                    this.scene.add(house1);
+
+
+                    const house_geometry_2 = new THREE.BoxGeometry(30, 30, 30);
+                    const house_material_2 = new THREE.ShadowMaterial({
+                        color: 0x595959,
+                        opacity: 1,
+                    });
+                    const mat2 = new THREE.MeshStandardMaterial({
+                        color: 0x595959,
+                        opacity: 0.5,
+                        transparent: true,
+                    });
+                    const house2 = new THREE.Mesh(house_geometry_2, house_material_2);
+                    house2.receiveShadow = true;
+                    house2.position.set(-57, 15, -42);
+                    this.scene.add(house2);
+
+
+                    const house_geometry_3 = new THREE.BoxGeometry(30, 30, 30);
+                    const house_material_3 = new THREE.ShadowMaterial({
+                        color: 0x595959,
+                        opacity: 1,
+                    });
+                    const mat3 = new THREE.MeshStandardMaterial({
+                        color: 0x595959,
+                        opacity: 0.5,
+                        transparent: true,
+                    });
+                    const house3 = new THREE.Mesh(house_geometry_3, house_material_3);
+                    house3.receiveShadow = true;
+                    house3.position.set(-65, 15, -71);
+                    this.scene.add(house3);
+
                 }.bind(this)
             );
             this.map = map;
@@ -133,6 +184,13 @@ export function setupLoader(map) {
             this.renderer.render(this.scene, this.camera);
 
             this.map.triggerRepaint();
+
+            const radius = 75;
+
+            if (window.tb.sunPosition != undefined) {
+                dirLight.position.x = radius * Math.sin(window.tb.sunPosition.azimuth);
+                dirLight.position.z = radius * Math.cos(window.tb.sunPosition.azimuth);
+            }
         },
     });
 }
