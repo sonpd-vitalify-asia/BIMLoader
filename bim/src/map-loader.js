@@ -145,7 +145,8 @@ export function setupLoader(map) {
                     });
                     const house4 = new THREE.Mesh(house_geometry_4, house_material_4);
                     house4.receiveShadow = true;
-                    house4.position.set(80, 15, 0);
+                    house4.position.set(80, 16, 0);
+                    house4.rotation.set(0, THREE.MathUtils.degToRad(2), 0);
                     this.scene.add(house4);
 
                 }.bind(this)
