@@ -5,7 +5,7 @@ export function setupLoader(map) {
     // parameters to ensure the model is georeferenced correctly on the map
     var modelOrigin = [139.66461146239243, 35.70698328883841]; 
     var modelAltitude = 0;
-    var modelRotate = [Math.PI / 2, THREE.MathUtils.degToRad(0), 0];
+    var modelRotate = [Math.PI / 2, THREE.MathUtils.degToRad(2), 0];
 
     var modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
         modelOrigin,
@@ -37,7 +37,7 @@ export function setupLoader(map) {
             this.scene = new THREE.Scene();
 
             dirLight = new THREE.DirectionalLight(0x5a5a5a, 1);
-            dirLight.position.set(40, 70, 100);
+            dirLight.position.set(40, 170, 200);
             let d = 1000;
             let r = 2;
             let mapSize = 8096;
@@ -52,10 +52,11 @@ export function setupLoader(map) {
             dirLight.intensity = 6;
             dirLight.shadow.bias = 0.0001;
             //dirLight.shadow.camera.visible = true;
-
-
             this.scene.add(dirLight);
             map.dirLight = dirLight;
+
+            var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+            this.scene.add(hemiLight);
 
             // use the three.js GLTF loader to add the 3D model to the three.js scene
             var loader = new THREE.GLTFLoader();
@@ -132,6 +133,21 @@ export function setupLoader(map) {
                     house3.position.set(-65, 15, -71);
                     this.scene.add(house3);
 
+                    const house_geometry_4 = new THREE.BoxGeometry(30, 30, 300);
+                    const house_material_4 = new THREE.ShadowMaterial({
+                        color: 0x595959,
+                        opacity: 1,
+                    });
+                    const mat4 = new THREE.MeshStandardMaterial({
+                        color: 0x595959,
+                        opacity: 0.5,
+                        transparent: true,
+                    });
+                    const house4 = new THREE.Mesh(house_geometry_4, house_material_4);
+                    house4.receiveShadow = true;
+                    house4.position.set(80, 15, 0);
+                    this.scene.add(house4);
+
                 }.bind(this)
             );
             this.map = map;
@@ -185,7 +201,7 @@ export function setupLoader(map) {
 
             this.map.triggerRepaint();
 
-            const radius = 75;
+            const radius = 155;
 
             if (window.tb.sunPosition != undefined) {
                 dirLight.position.x = radius * Math.sin(window.tb.sunPosition.azimuth);
