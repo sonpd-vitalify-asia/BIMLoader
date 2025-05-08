@@ -8,6 +8,7 @@ export function setupShadow(map) {
         night: 'cma6doztc00dn01sl7wrl5zol'
     }
     let selectedStyle = styles.day;
+    let cast_shadow = false;
 
     map.addLayer({
         id: 'flight-route-layer',
@@ -61,24 +62,48 @@ export function setupShadow(map) {
         })
 
         function changeStyleWithDaylight(date, origin) {
+
+            const pos = tb.getSunPosition(date, [-0.12501974, 51.53]);
+
+            function radiansToDegrees(rad) {
+                return (rad * 180) / Math.PI;
+            }
+
+            const azimuthInDegrees = radiansToDegrees(pos.azimuth); // ≈ 180°
+
+            function normalizeAzimuth(azimuth) {
+                return ((azimuth % 360) + 360) % 360;
+            }
+
             let sunTimes = tb.getSunTimes(date, origin);
+
             if (date >= sunTimes.sunriseEnd && date <= sunTimes.sunsetStart) {
                 if (selectedStyle != styles.day) {
                     console.log("it's day");
                     map.setPaintProperty('background', 'background-color', '#7fb4f7');
                     selectedStyle = styles.day;
-
-                    map.dirLight.visible = true;
+                    cast_shadow = true;
                 }
             } else {
                 if (selectedStyle != styles.night) {
                     console.log("it's night");
                     map.setPaintProperty('background', 'background-color', '#808080');
                     selectedStyle = styles.night;
-
-                    map.dirLight.visible = false;
+                    cast_shadow = false;
                 }
             }
+
+            map.setLights([{
+                "id": "directional",
+                "type": "directional",
+                "properties": {
+                    "color": "rgba(255.0, 255.0, 255.0, 1.0)",
+                    "intensity": 1,
+                    "direction": [normalizeAzimuth(azimuthInDegrees), 45],
+                    "cast-shadows": cast_shadow,
+                    "shadow-intensity": 1
+                }
+            }]);
         }
     }
 }
