@@ -4,11 +4,16 @@ export function setupShadow(map) {
     let origin = [139.6902, 35.689];
 
     let styles = {
-        day: 'ckomjiv0e0bka17mzt5z7v5ij',
-        night: 'cma6doztc00dn01sl7wrl5zol'
+        day: 'day',
+        night: 'night',
+        zero: 'zero'
     }
-    let selectedStyle = styles.day;
+    let selectedStyle = styles.zero;
     let cast_shadow = false;
+    let date;
+    let initialTimeValue;
+    let timeInput;
+    let interval = null;
 
     map.addLayer({
         id: 'flight-route-layer',
@@ -25,8 +30,6 @@ export function setupShadow(map) {
 
             Load();
 
-
-
         },
 
         render: function (gl, matrix) {
@@ -36,15 +39,20 @@ export function setupShadow(map) {
 
     async function Load() {
 
-        let date = tb.lightDateTime;
+        date = tb.lightDateTime;
         let time = (date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds());
-        let timeInput = document.getElementById('time');
+        timeInput = document.getElementById('time');
         timeInput.value = time;
+        initialTimeValue = time;
+
+        changeStyleWithDaylight(date, origin);
+
         timeInput.oninput = () => {
             time = +timeInput.value;
             date.setHours(Math.floor(time / 3600));
             date.setMinutes(Math.floor(time / 60) % 60);
             date.setSeconds(time % 60);
+
             map.triggerRepaint();
         };
 
@@ -78,19 +86,26 @@ export function setupShadow(map) {
             let sunTimes = tb.getSunTimes(date, origin);
 
             if (date >= sunTimes.sunriseEnd && date <= sunTimes.sunsetStart) {
-                if (selectedStyle != styles.day) {
+                if (selectedStyle != styles.day || selectedStyle == styles.zero) {
                     console.log("it's day");
                     map.setPaintProperty('background', 'background-color', '#7fb4f7');
+                    map.setPaintProperty('building-extrusion', 'fill-extrusion-color', '#ffffff');
+                    map.setPaintProperty('custom-extrusion-layer', 'fill-extrusion-color', '#ffffff');
                     selectedStyle = styles.day;
                     cast_shadow = true;
                 }
+
             } else {
                 if (selectedStyle != styles.night) {
                     console.log("it's night");
                     map.setPaintProperty('background', 'background-color', '#808080');
+                    map.setPaintProperty('building-extrusion', 'fill-extrusion-color', '#808080');
+                    map.setPaintProperty('custom-extrusion-layer', 'fill-extrusion-color', '#808080');
+
                     selectedStyle = styles.night;
                     cast_shadow = false;
                 }
+
             }
 
             map.setLights([{
@@ -106,4 +121,36 @@ export function setupShadow(map) {
             }]);
         }
     }
+
+    document.getElementById('playButton').addEventListener('click', () => {
+ 
+        interval = setInterval(() => {
+            var val = parseInt(timeInput.value) + 50; // Change this line+ 1;
+
+            timeInput.value = val;
+
+            timeInput.dispatchEvent(new Event('input'));
+
+        }, 100); // advance every 0.1 seconds
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', () => {
+
+        if (interval != undefined) {
+            clearInterval(interval);
+            // release our intervalId from the variable
+            interval = null;
+        }
+
+
+        const layers = map.getStyle().layers;
+        console.log(layers);
+    });
+
+    document.getElementById('resetButton').addEventListener('click', () => {
+
+        timeInput.value = initialTimeValue;
+
+        timeInput.dispatchEvent(new Event('input'));
+    });
 }

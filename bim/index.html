@@ -69,6 +69,15 @@
             min-width: 90%;
         }
 
+        .button-row {
+            position: absolute;
+            top: 82%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 10px;
+        }
+
         #hour {
             background: rgba(0, 0, 0, 0.5);
             color: #fff;
@@ -90,7 +99,13 @@
 
 <body>
     <div class="full-screen" id="map"></div>
-    <input id='time' type='range' min="0" max="86399" />
+    <div class="button-row">
+        <button id="playButton">   <img src="./play.png" alt="Icon" style="width: 30px; height: 30px; vertical-align: middle;"> </button>
+        <button id="pauseButton"><img src="./pause.png" alt="Icon" style="width: 30px; height: 30px; vertical-align: middle;"></button>
+        <button id="resetButton"><img src="./reset.png" alt="Icon" style="width: 30px; height: 30px; vertical-align: middle;"></button>
+    </div>
+    <input id='time' type='range' min="0" max="86399"  />
+
     <div id="hour" class="mapboxgl-map"></div>
 
     <script type="module" src="/src/main.js"></script>
