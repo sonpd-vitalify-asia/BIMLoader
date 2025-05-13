@@ -93,6 +93,18 @@ export function setupShadow(map) {
                     map.setPaintProperty('custom-extrusion-layer', 'fill-extrusion-color', '#ffffff');
                     selectedStyle = styles.day;
                     cast_shadow = true;
+
+                    const groupedLayers = getLayersByGroup(map, "Road network, surface");
+                    groupedLayers.forEach(setWhiteColor);
+
+                    function setWhiteColor(item) {
+                        if (item.type == "line") {
+                            map.setPaintProperty(item.id, 'line-color', '#a5cdfd');
+                        }
+                        if (item.type == "fill") {
+                            map.setPaintProperty(item.id, 'fill-color', '#a5cdfd');
+                        }
+                    }
                 }
 
             } else {
@@ -104,6 +116,18 @@ export function setupShadow(map) {
 
                     selectedStyle = styles.night;
                     cast_shadow = false;
+
+                    const groupedLayers = getLayersByGroup(map, "Road network, surface");
+                    groupedLayers.forEach(setGreyColor);
+
+                    function setGreyColor(item) {
+                        if (item.type == "line") {
+                            map.setPaintProperty(item.id, 'line-color', '#808080');
+                        }
+                        if (item.type == "fill") {
+                            map.setPaintProperty(item.id, 'fill-color', '#808080');
+                        }
+                    }
                 }
 
             }
@@ -142,7 +166,6 @@ export function setupShadow(map) {
             interval = null;
         }
 
-
         const layers = map.getStyle().layers;
         console.log(layers);
     });
@@ -153,4 +176,11 @@ export function setupShadow(map) {
 
         timeInput.dispatchEvent(new Event('input'));
     });
+
+    function getLayersByGroup(map, groupId) {
+        const layers = map.getStyle().layers;
+        return layers.filter(layer =>
+            layer.metadata && layer.metadata["mapbox:group"] === groupId
+        );
+    }
 }
