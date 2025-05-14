@@ -138,9 +138,9 @@ export function setupShadow(map) {
                 "properties": {
                     "color": "rgba(255.0, 255.0, 255.0, 1.0)",
                     "intensity": 1,
-                    "direction": [normalizeAzimuth(azimuthInDegrees), 45],
+                    "direction": [normalizeAzimuth(azimuthInDegrees), 60],
                     "cast-shadows": cast_shadow,
-                    "shadow-intensity": 1
+                    "shadow-intensity": 0.5
                 }
             }]);
         }
@@ -160,14 +160,12 @@ export function setupShadow(map) {
 
     document.getElementById('pauseButton').addEventListener('click', () => {
 
+        console.log(interval);
         if (interval != undefined) {
             clearInterval(interval);
             // release our intervalId from the variable
             interval = null;
         }
-
-        const layers = map.getStyle().layers;
-        console.log(layers);
     });
 
     document.getElementById('resetButton').addEventListener('click', () => {
