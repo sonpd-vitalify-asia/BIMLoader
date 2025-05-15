@@ -40,6 +40,10 @@ export function setupShadow(map) {
     async function Load() {
 
         date = tb.lightDateTime;
+        console.log(date);
+
+        date.setHours(4, 0, 0,0);
+
         let time = (date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds());
         timeInput = document.getElementById('time');
         timeInput.value = time;
@@ -146,21 +150,32 @@ export function setupShadow(map) {
         }
     }
 
-    document.getElementById('playButton').addEventListener('click', () => {
- 
-        interval = setInterval(() => {
-            var val = parseInt(timeInput.value) + 50; // Change this line+ 1;
+    const playBtn = document.getElementById('playButton');
+    const pauseBtn = document.getElementById('pauseButton');
+    pauseBtn.classList.add('active');
 
-            timeInput.value = val;
+    playBtn.addEventListener('click', () => {
 
-            timeInput.dispatchEvent(new Event('input'));
+        playBtn.classList.add('active');
+        pauseBtn.classList.remove('active');
 
-        }, 100); // advance every 0.1 seconds
+        if (interval == undefined) {
+
+            interval = setInterval(() => {
+                var val = parseInt(timeInput.value) + 250; // Change this line+ 1;
+
+                timeInput.value = val;
+
+                timeInput.dispatchEvent(new Event('input'));
+
+            }, 100); // advance every 0.1 seconds
+        }
     });
 
-    document.getElementById('pauseButton').addEventListener('click', () => {
+    pauseBtn.addEventListener('click', () => {
+        pauseBtn.classList.add('active');
+        playBtn.classList.remove('active');
 
-        console.log(interval);
         if (interval != undefined) {
             clearInterval(interval);
             // release our intervalId from the variable
