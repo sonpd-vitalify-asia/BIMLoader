@@ -14,6 +14,7 @@ export function setupShadow(map) {
     let initialTimeValue;
     let timeInput;
     let interval = null;
+    let lastAzimith = 0;
 
     InitButtons();
 
@@ -147,17 +148,21 @@ export function setupShadow(map) {
                 return Math.round(value / step) * step;
             }
 
-            map.setLights([{
-                "id": "directional",
-                "type": "directional",
-                "properties": {
-                    "color": "rgba(255.0, 255.0, 255.0, 1.0)",
-                    "intensity": 1,
-                    "direction": [azimuth, 60],
-                    "cast-shadows": cast_shadow,
-                    "shadow-intensity": 0.5
-                }
-            }]);
+            if (azimuth != lastAzimith) {
+                map.setLights([{
+                    "id": "directional",
+                    "type": "directional",
+                    "properties": {
+                        "color": "rgba(255.0, 255.0, 255.0, 1.0)",
+                        "intensity": 1,
+                        "direction": [azimuth, 60],
+                        "cast-shadows": cast_shadow,
+                        "shadow-intensity": 1
+                    }
+                }]);
+
+                lastAzimith = azimuth;
+            }
         }
     }
 
