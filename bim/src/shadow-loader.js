@@ -153,11 +153,16 @@ export function setupShadow(map) {
     const playBtn = document.getElementById('playButton');
     const pauseBtn = document.getElementById('pauseButton');
     pauseBtn.classList.add('active');
+    playBtn.style.display = 'inline';
+    pauseBtn.style.display = 'none';
 
     playBtn.addEventListener('click', () => {
 
         playBtn.classList.add('active');
         pauseBtn.classList.remove('active');
+
+        playBtn.style.display = 'none';
+        pauseBtn.style.display = 'inline';
 
         if (interval == undefined) {
 
@@ -175,6 +180,9 @@ export function setupShadow(map) {
     pauseBtn.addEventListener('click', () => {
         pauseBtn.classList.add('active');
         playBtn.classList.remove('active');
+
+        playBtn.style.display = 'inline';
+        pauseBtn.style.display = 'none';
 
         if (interval != undefined) {
             clearInterval(interval);
