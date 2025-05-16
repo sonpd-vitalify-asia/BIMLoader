@@ -15,6 +15,8 @@ export function setupShadow(map) {
     let timeInput;
     let interval = null;
 
+    InitButtons();
+
     map.addLayer({
         id: 'flight-route-layer',
         type: 'custom',
@@ -150,53 +152,55 @@ export function setupShadow(map) {
         }
     }
 
-    const playBtn = document.getElementById('playButton');
-    const pauseBtn = document.getElementById('pauseButton');
-    pauseBtn.classList.add('active');
-    playBtn.style.display = 'inline';
-    pauseBtn.style.display = 'none';
-
-    playBtn.addEventListener('click', () => {
-
-        playBtn.classList.add('active');
-        pauseBtn.classList.remove('active');
-
-        playBtn.style.display = 'none';
-        pauseBtn.style.display = 'inline';
-
-        if (interval == undefined) {
-
-            interval = setInterval(() => {
-                var val = parseInt(timeInput.value) + 250; // Change this line+ 1;
-
-                timeInput.value = val;
-
-                timeInput.dispatchEvent(new Event('input'));
-
-            }, 100); // advance every 0.1 seconds
-        }
-    });
-
-    pauseBtn.addEventListener('click', () => {
+    function InitButtons() {
+        const playBtn = document.getElementById('playButton');
+        const pauseBtn = document.getElementById('pauseButton');
         pauseBtn.classList.add('active');
-        playBtn.classList.remove('active');
-
         playBtn.style.display = 'inline';
         pauseBtn.style.display = 'none';
 
-        if (interval != undefined) {
-            clearInterval(interval);
-            // release our intervalId from the variable
-            interval = null;
-        }
-    });
+        playBtn.addEventListener('click', () => {
 
-    document.getElementById('resetButton').addEventListener('click', () => {
+            playBtn.classList.add('active');
+            pauseBtn.classList.remove('active');
 
-        timeInput.value = initialTimeValue;
+            playBtn.style.display = 'none';
+            pauseBtn.style.display = 'inline';
 
-        timeInput.dispatchEvent(new Event('input'));
-    });
+            if (interval == undefined) {
+
+                interval = setInterval(() => {
+                    var val = parseInt(timeInput.value) + 250; // Change this line+ 1;
+
+                    timeInput.value = val;
+
+                    timeInput.dispatchEvent(new Event('input'));
+
+                }, 100); // advance every 0.1 seconds
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            pauseBtn.classList.add('active');
+            playBtn.classList.remove('active');
+
+            playBtn.style.display = 'inline';
+            pauseBtn.style.display = 'none';
+
+            if (interval != undefined) {
+                clearInterval(interval);
+                // release our intervalId from the variable
+                interval = null;
+            }
+        });
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+
+            timeInput.value = initialTimeValue;
+
+            timeInput.dispatchEvent(new Event('input'));
+        });
+    }
 
     function getLayersByGroup(map, groupId) {
         const layers = map.getStyle().layers;
