@@ -138,13 +138,22 @@ export function setupShadow(map) {
 
             }
 
+         
+            let step = document.getElementById('tickRate').value / 10;
+            var azimuth = roundToNearestHalf(normalizeAzimuth(azimuthInDegrees));
+           
+            //console.log(azimuth);
+            function roundToNearestHalf(value) {
+                return Math.round(value / step) * step;
+            }
+
             map.setLights([{
                 "id": "directional",
                 "type": "directional",
                 "properties": {
                     "color": "rgba(255.0, 255.0, 255.0, 1.0)",
                     "intensity": 1,
-                    "direction": [normalizeAzimuth(azimuthInDegrees), 60],
+                    "direction": [azimuth, 60],
                     "cast-shadows": cast_shadow,
                     "shadow-intensity": 0.5
                 }
